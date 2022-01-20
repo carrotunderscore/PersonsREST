@@ -4,6 +4,7 @@ import com.example.personsrest.domain.*;
 import com.example.personsrest.service.PersonService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,15 +30,8 @@ public class PersonController {
         return toDTO(personService.save(createPerson));
     }
 
-    public PersonDTO toDTO(Person person) {
 
-        return new PersonDTO(
-                person.getId(),
-                person.getName(),
-                person.getCity(),
-                person.getAge(),
-                person.getGroups());
-    }
+
     @PutMapping("/{id}")
     public PersonDTO updatePerson(@PathVariable("id") String id, @RequestBody UpdatePerson updatePerson) {
         return toDTO(
@@ -47,6 +41,12 @@ public class PersonController {
                         updatePerson.getCity(),
                         updatePerson.getAge()));
     }
+
+    @PutMapping("/{id}/addGroup/{groupName}")
+    public PersonDTO addGroup(@PathVariable("id") String id, @PathVariable("groupName") String groupName) {
+        return toDTO(personService.addGroup(id, groupName));
+    }
+
     @GetMapping("/{id}")
     public PersonDTO findById(@PathVariable("id") String id) {
         return toDTO(personService.findById(id));
@@ -56,5 +56,12 @@ public class PersonController {
         return toDTO(personService.delete(id));
     }
 
-
+    public PersonDTO toDTO(Person person) {
+        return new PersonDTO(
+                person.getId(),
+                person.getName(),
+                person.getCity(),
+                person.getAge(),
+                person.getGroups());
+    }
 }

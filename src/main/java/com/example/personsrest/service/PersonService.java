@@ -1,6 +1,8 @@
 package com.example.personsrest.service;
 
 import com.example.personsrest.domain.*;
+import com.example.personsrest.remote.GroupRemote;
+import com.example.personsrest.remote.GroupRemoteImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +16,7 @@ import java.util.Map;
 public class PersonService {
 
     PersonRepository personRepository;
+    GroupRemote groupRemote = new GroupRemoteImpl();
 
     public List<Person> findAll() {
         return personRepository.findAll();
@@ -43,8 +46,12 @@ public class PersonService {
             return null;
         }
     }
-
-
+    public Person addGroup(String id, String groupName) {
+        return personRepository.findById(id).map(person -> {
+            person.addGroup(groupRemote.createGroup(groupName));
+            return personRepository.save(person);
+        }).orElse(null);
+    }
 
     public Person delete(String id) {
         Person person = personRepository.findById(id).orElse(null);
@@ -65,4 +72,6 @@ public class PersonService {
 
         return personRepository.findAllByNameContainingOrCityContaining(searchParams.get("search"), searchParams.get("search"), pageRequest);
     }
+
+
 }

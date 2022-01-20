@@ -167,7 +167,29 @@ class PersonsRestApplicationTests {
         verify(groupRemote, times(1)).createGroup(eq("Ankeborgare"));
         verify(person, times(1)).addGroup(eq(groupId));
     }
+    // TESTCODE--------------------------------------------------------------------
+    @Test
+    void test() {
+        String groupId = UUID.randomUUID().toString();
+        String personId = UUID.randomUUID().toString();
+        Person person = mock(Person.class);
+        Person person2 = mock(Person.class);
+        when(person2.getGroups()).thenReturn(List.of(groupId));
+        System.out.println(person.getGroups());
 
+        when(personRepository.findById(eq(personId))).thenReturn(Optional.of(person));
+        when(personRepository.save(eq(person))).thenReturn(person2);
+        when(groupRemote.createGroup(eq("Ankeborgare"))).thenReturn(groupId);
+        when(groupRemote.getNameById(eq(groupId))).thenReturn("Ankeborgare");
+
+        PersonAPI.PersonDTO personWithAddedGroup = personApi.addGroup(personId, "Ankeborgare");
+
+        System.out.println(personWithAddedGroup.getGroups());
+        assertEquals("Ankeborgare", personWithAddedGroup.getGroups().get(0));
+
+    }
+    // TESTCODE--------------------------------------------------------------------
+    // RED
     @Test
     void test_remove_group_from_person_success() {
         // Given
@@ -189,7 +211,7 @@ class PersonsRestApplicationTests {
         verify(person, times(1)).removeGroup(eq(groupId));
         verify(personRepository, times(1)).save(eq(person));
     }
-
+    // RED
     @Test
     void test_get_persons_filter_by_name_success() {
         // Given

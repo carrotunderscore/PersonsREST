@@ -74,7 +74,7 @@ public class PersonImpl implements Person {
 
     @Override
     public void addGroup(String groupId) {
-        groups.add(groupId);
+        this.groups.add(groupId);
     }
 
     @Override

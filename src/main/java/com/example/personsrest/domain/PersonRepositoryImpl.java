@@ -19,7 +19,7 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public Optional<Person> findById(String id) {
-        return Optional.empty();
+        return persons.containsKey(id) ? Optional.of(persons.get(id)) : Optional.empty();
     }
 
     @Override
@@ -39,7 +39,8 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public Person save(Person person) {
-        return null;
+        persons.put(person.getId(), person);
+        return person;
     }
 
     @Override
