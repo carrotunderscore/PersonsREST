@@ -46,6 +46,7 @@ public class PersonService {
             return null;
         }
     }
+
     public Person addGroup(String id, String groupName) {
         return personRepository.findById(id).map(person -> {
             person.addGroup(groupRemote.createGroup(groupName));
@@ -71,6 +72,10 @@ public class PersonService {
                 : PageRequest.of(1, 20);
 
         return personRepository.findAllByNameContainingOrCityContaining(searchParams.get("search"), searchParams.get("search"), pageRequest);
+    }
+
+    public String getGroupName(String groupId) {
+        return groupRemote.getNameById(groupId);
     }
 
 

@@ -2,17 +2,19 @@ package com.example.personsrest.domain;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Data
 public class PersonImpl implements Person {
 
-    String id;
-    String name;
-    int age;
-    String city;
-    List<String> groups;
+    private String id;
+    private String name;
+    private int age;
+    private String city;
+    private List<String> groups = new ArrayList<String>();
+
 
     public PersonImpl(String name, int age, String city, List<String> groups) {
         this.id = UUID.randomUUID().toString();
@@ -74,7 +76,7 @@ public class PersonImpl implements Person {
 
     @Override
     public void addGroup(String groupId) {
-        this.groups.add(groupId);
+        groups.add(groupId);
     }
 
     @Override

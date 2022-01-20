@@ -16,9 +16,9 @@ public class GroupRemoteImpl implements GroupRemote {
     KeyCloakToken token = KeyCloakToken.acquire("https://iam.sensera.se/", "test", "group-api", "user", "djnJnPf7VCQvp3Fc")
             .block(Duration.ofSeconds(20));
     @Override
-    public String getNameById(String groupName) {
+    public String getNameById(String groupId) {
         return Objects.requireNonNull(webClient
-                .get().uri("api/groups/" + groupName)
+                .get().uri("api/groups/" + groupId)
                 .header("Authorization", "Bearer " + token.getAccessToken())
                 .retrieve()
                 .bodyToMono(Group.class)

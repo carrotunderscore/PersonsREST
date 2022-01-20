@@ -31,7 +31,6 @@ public class PersonController {
     }
 
 
-
     @PutMapping("/{id}")
     public PersonDTO updatePerson(@PathVariable("id") String id, @RequestBody UpdatePerson updatePerson) {
         return toDTO(
@@ -42,7 +41,7 @@ public class PersonController {
                         updatePerson.getAge()));
     }
 
-    @PutMapping("/{id}/addGroup/{groupName}")
+    @PutMapping("{id}/addGroup/{groupName}")
     public PersonDTO addGroup(@PathVariable("id") String id, @PathVariable("groupName") String groupName) {
         return toDTO(personService.addGroup(id, groupName));
     }
@@ -56,12 +55,15 @@ public class PersonController {
         return toDTO(personService.delete(id));
     }
 
-    public PersonDTO toDTO(Person person) {
+    private PersonDTO toDTO(Person person) {
         return new PersonDTO(
                 person.getId(),
                 person.getName(),
                 person.getCity(),
                 person.getAge(),
-                person.getGroups());
+                person.getGroups().stream()
+                        .map(groupId -> personService.getGroupName(groupId))
+                        .collect(Collectors.toList())
+        );
     }
 }

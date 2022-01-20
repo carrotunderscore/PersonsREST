@@ -3,6 +3,7 @@ package com.example.personsrest;
 import com.example.personsrest.domain.Person;
 import com.example.personsrest.domain.PersonRepository;
 import com.example.personsrest.remote.GroupRemote;
+import com.example.personsrest.service.PersonService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -33,6 +35,8 @@ import static org.springframework.test.util.AssertionErrors.assertTrue;
 class PersonsRestApplicationTests {
     @LocalServerPort
     int port;
+
+    PersonService personService;
 
     @Autowired
     WebTestClient webTestClient;
@@ -145,7 +149,7 @@ class PersonsRestApplicationTests {
         verify(personRepository, times(1)).delete(eq(personId));
     }
 
-    // RED
+    // GREEN
     @Test
     void test_add_group_to_person_success() {
         // Given
@@ -167,6 +171,7 @@ class PersonsRestApplicationTests {
         verify(groupRemote, times(1)).createGroup(eq("Ankeborgare"));
         verify(person, times(1)).addGroup(eq(groupId));
     }
+//----------------------------------------------------------------------------------------------------------------------
     // TESTCODE--------------------------------------------------------------------
     @Test
     void test() {
@@ -175,20 +180,29 @@ class PersonsRestApplicationTests {
         Person person = mock(Person.class);
         Person person2 = mock(Person.class);
         when(person2.getGroups()).thenReturn(List.of(groupId));
-        System.out.println(person.getGroups());
-
         when(personRepository.findById(eq(personId))).thenReturn(Optional.of(person));
         when(personRepository.save(eq(person))).thenReturn(person2);
         when(groupRemote.createGroup(eq("Ankeborgare"))).thenReturn(groupId);
         when(groupRemote.getNameById(eq(groupId))).thenReturn("Ankeborgare");
 
+        // When
         PersonAPI.PersonDTO personWithAddedGroup = personApi.addGroup(personId, "Ankeborgare");
 
-        System.out.println(personWithAddedGroup.getGroups());
+        // Then
         assertEquals("Ankeborgare", personWithAddedGroup.getGroups().get(0));
+        verify(groupRemote, times(1)).createGroup(eq("Ankeborgare"));
+        verify(person, times(1)).addGroup(eq(groupId));
+
+
+        System.out.println(person.getGroups());
+        List<String> people = person.getGroups().stream()
+                .map(id -> personService.getGroupName(id))
+                .collect(Collectors.toList());
+        people.forEach(System.out::println);
 
     }
     // TESTCODE--------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------
     // RED
     @Test
     void test_remove_group_from_person_success() {
