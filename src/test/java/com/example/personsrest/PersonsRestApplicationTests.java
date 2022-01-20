@@ -175,30 +175,8 @@ class PersonsRestApplicationTests {
     // TESTCODE--------------------------------------------------------------------
     @Test
     void test() {
-        String groupId = UUID.randomUUID().toString();
-        String personId = UUID.randomUUID().toString();
-        Person person = mock(Person.class);
-        Person person2 = mock(Person.class);
-        when(person2.getGroups()).thenReturn(List.of(groupId));
-        when(personRepository.findById(eq(personId))).thenReturn(Optional.of(person));
-        when(personRepository.save(eq(person))).thenReturn(person2);
-        when(groupRemote.createGroup(eq("Ankeborgare"))).thenReturn(groupId);
-        when(groupRemote.getNameById(eq(groupId))).thenReturn("Ankeborgare");
-
-        // When
-        PersonAPI.PersonDTO personWithAddedGroup = personApi.addGroup(personId, "Ankeborgare");
-
-        // Then
-        assertEquals("Ankeborgare", personWithAddedGroup.getGroups().get(0));
-        verify(groupRemote, times(1)).createGroup(eq("Ankeborgare"));
-        verify(person, times(1)).addGroup(eq(groupId));
 
 
-        System.out.println(person.getGroups());
-        List<String> people = person.getGroups().stream()
-                .map(id -> personService.getGroupName(id))
-                .collect(Collectors.toList());
-        people.forEach(System.out::println);
 
     }
     // TESTCODE--------------------------------------------------------------------
