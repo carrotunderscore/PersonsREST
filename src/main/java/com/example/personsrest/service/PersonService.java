@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor
@@ -53,6 +54,13 @@ public class PersonService {
             return personRepository.save(person);
         }).orElse(null);
     }
+    public Person removeGroup(String id, String groupName) {
+        return personRepository.findById(id).map(person -> {
+            if (isValidUUID(groupName)) person.removeGroup(groupName);
+            else person.getGroups().removeIf(group -> groupRemote.getNameById(group).equalsIgnoreCase(groupName));
+            return personRepository.save(person);
+        }).orElse(null);
+    }
 
     public Person delete(String id) {
         Person person = personRepository.findById(id).orElse(null);
@@ -79,4 +87,13 @@ public class PersonService {
     }
 
 
+    private final static Pattern UUID_REGEX_PATTERN =
+            Pattern.compile("^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$");
+
+    public static boolean isValidUUID(String str) {
+        if (str == null) {
+            return false;
+        }
+        return UUID_REGEX_PATTERN.matcher(str).matches();
+    }
 }
