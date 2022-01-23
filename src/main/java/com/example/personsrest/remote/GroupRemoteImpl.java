@@ -1,7 +1,6 @@
 package com.example.personsrest.remote;
 
 import com.example.personsrest.KeyCloakToken;
-import org.apache.catalina.Group;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -17,8 +16,8 @@ public class GroupRemoteImpl implements GroupRemote {
             .block(Duration.ofSeconds(20));
     @Override
     public String getNameById(String groupId) {
-        return Objects.requireNonNull(
-                webClient.get().uri("api/groups/" + groupId)
+        return Objects.requireNonNull(webClient
+                .get().uri("api/groups/" + groupId)
                 .header("Authorization", "Bearer " + token.getAccessToken())
                 .retrieve()
                 .bodyToMono(Group.class)
@@ -27,15 +26,15 @@ public class GroupRemoteImpl implements GroupRemote {
 
     @Override
     public String createGroup(String name) {
-        return Objects.requireNonNull(
-                webClient.post()
-                        .uri("api/groups")
-                        .header("Authorization", "Bearer " + token.getAccessToken())
-                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .body(BodyInserters.fromValue(new CreateGroup(name)))
-                        .retrieve()
-                        .bodyToMono(Group.class)
-                        .block()).getName();
+        return Objects.requireNonNull(webClient
+                .post()
+                .uri("api/groups")
+                .header("Authorization", "Bearer " + token.getAccessToken())
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(BodyInserters.fromValue(new CreateGroup(name)))
+                .retrieve()
+                .bodyToMono(com.example.personsrest.remote.Group.class)
+                .block()).getId();
     }
 
     @Override

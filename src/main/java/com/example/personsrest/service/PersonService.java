@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -29,7 +30,7 @@ public class PersonService {
                         createPerson.getName(),
                         createPerson.getAge(),
                         createPerson.getCity(),
-                        List.of()));
+                        new ArrayList<>()));
     }
 
     public Person findById(String id) {
@@ -54,6 +55,7 @@ public class PersonService {
             return personRepository.save(person);
         }).orElse(null);
     }
+
     public Person removeGroup(String id, String groupName) {
         return personRepository.findById(id).map(person -> {
             if (isValidUUID(groupName)) person.removeGroup(groupName);

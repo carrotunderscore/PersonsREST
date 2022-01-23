@@ -12,7 +12,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     Map<String, Person> persons = new HashMap<>();
 
     public PersonRepositoryImpl() {
-        Person person = new PersonImpl("Arne Anka", 12, "Stad", List.of());
+        Person person = new PersonImpl("Arne Anka", 12, "Stad", new ArrayList<>());
         persons.put(person.getId(), person);
     }
 
@@ -29,12 +29,15 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public Page<Person> findAllByNameContainingOrCityContaining(String name, String city, Pageable pageable) {
-        return null;
+        return new PageImpl<>(
+                persons.values().stream()
+                        .filter(person -> person.getName().equalsIgnoreCase(name))
+                        .collect(Collectors.toList()));
     }
 
     @Override
     public void deleteAll() {
-
+        persons.clear();
     }
 
     @Override
@@ -45,7 +48,7 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     @Override
     public void delete(String id) {
-
+        persons.remove(id);
     }
 
 

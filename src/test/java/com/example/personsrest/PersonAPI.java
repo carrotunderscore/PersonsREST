@@ -30,8 +30,8 @@ public class PersonAPI {
                 .getResponseBody();
     }
 
-    public Flux<PersonDTO> all(String search, int pagesize, int pagenumber) {
-        return webTestClient.get().uri("/api/persons?search="+search+"&pagenumber="+pagenumber+"&pagesize="+pagesize)
+    public Flux<PersonDTO> all(String search, int pageSize, int pageNumber) {
+        return webTestClient.get().uri("/api/persons?search="+search+"&pagenumber="+pageNumber+"&pagesize="+pageSize)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
