@@ -46,12 +46,6 @@ public class PersonsRestApplicationIntegrationTests {
     }
 
     @Test
-    void test(){
-
-    }
-
-
-    @Test
     void test_remove_group_from_person() {
         // Given
         PersonAPI.PersonDTO person1 = personAPI.createPerson("Arne Anka", "Ankeborg", 100);
